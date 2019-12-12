@@ -5,11 +5,25 @@
 
 import serial
 import pygame
+import mysql.connector
+import time
+
+cnx = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="root",
+    database="558-final"
+)
+
+mycursor = cnx.cursor()
 
 arduino1 = serial.Serial('COM13', 9600, timeout=1)
 # arduino2 = serial.Serial('COM11', 9600, timeout=1)
 # arduino3 = serial.Serial('COM9', 9600, timeout=1)
 # arduino4 = serial.Serial('COM12', 9600, timeout=1)
+
+currentTime = time.time()
+timeToRefresh = currentTime + 5
 
 textPositionSensor1 = [25, 25]
 textPositionSensor2 = [600, 25]
@@ -20,6 +34,12 @@ activeBluePess = [0, 0, 0, 0]
 blueButton = [-1, -1, -1, -1]
 activeRedPess = [0, 0, 0, 0]
 redButton = [-1, -1, -1, -1]
+
+red5Minute = [0,0,0,0]
+blue5Minute = [0,0,0,0]
+
+red10Minute = [0,0,0,0]
+blue10Minute = [0,0,0,0]
 
 pygame.init()
 white = (0, 0, 0)
@@ -49,12 +69,28 @@ def translateValueRange(value, oldMin, oldMax, newMin, newMax):
     newValue = (((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
     return newValue;
 
+def recordButtonPress(buttonName):
+    sql = "INSERT INTO button (name) VALUE ('" + buttonName + "')"
+    mycursor.execute(sql)
+    cnx.commit()
+
+def checkRecordCount(buttonName, timeFrame):
+    sql = "SELECT COUNT(name) FROM button WHERE time >= NOW() - INTERVAL " + timeFrame + " MINUTE AND name = '" + buttonName + "'"
+    print(sql)
+    mycursor = cnx.cursor(buffered=True)
+    mycursor.execute(sql)
+    cnx.commit()
+    myresult = mycursor.fetchall()
+    for x in myresult:
+        return x[0]
+
 
 # refactor
 def checkButtonPress(red1, blue1, red2, blue2, red3, blue3, red4, blue4):
     if red1 == 1 and activeRedPess[0] == 0:
         redButton[0] = redButton[0] + 1
         activeRedPess[0] = 1
+        recordButtonPress("red1")
     elif red1 == 0 and activeRedPess[0] == 1:
         activeRedPess[0] = 0
     if red2 == 1 and activeRedPess[1] == 0:
@@ -131,6 +167,8 @@ while not crashed:
     messageDisplay("Microphone: " + str(mic), 36, textPositionSensor1[0], textPositionSensor1[1] + 105)
     messageDisplay("Accepted: " + str(blueButton[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 135)
     messageDisplay("Rejected: " + str(redButton[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 165)
+    messageDisplay("Rejected 5 Minutes: " + str(red5Minute[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 195)
+
 
     # removed ascii characters
     distance = distance.rstrip()
@@ -155,7 +193,6 @@ while not crashed:
     messageDisplay("Red Button: " + red2, 36, textPositionSensor2[0], textPositionSensor2[1] + 70)
     messageDisplay("Distance : " + distance, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
     messageDisplay("Accepted: " + str(blueButton[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 135)
-    messageDisplay("Rejected: " + str(redButton[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 165)
 
     lightError = abs(idealLight - int(photo))
     if lightError > 255:
@@ -197,6 +234,11 @@ while not crashed:
     messageDisplay("Accepted: " + str(blueButton[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 135)
     messageDisplay("Rejected: " + str(redButton[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 165)
 
+    if(timeToRefresh < time.time()):
+        timeToRefresh = time.time()+10
+
+        red5Minute[0] = checkRecordCount("red1", "5")
+        
     pygame.display.update()
 
 pygame.quit()
