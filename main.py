@@ -96,37 +96,44 @@ def checkButtonPress(red1, blue1, red2, blue2, red3, blue3, red4, blue4):
     if red2 == 1 and activeRedPess[1] == 0:
         redButton[1] = redButton[1] + 1
         activeRedPess[1] = 1
+        recordButtonPress("red2")
     elif red2 == 0 and activeRedPess[1] == 1:
         activeRedPess[1] = 0
     if red3 == 1 and activeRedPess[2] == 0:
         redButton[2] = redButton[2] + 1
         activeRedPess[2] = 1
+        recordButtonPress("red3")
     elif red3 == 0 and activeRedPess[2] == 1:
         activeRedPess[2] = 0
     if red4 == 1 and activeRedPess[3] == 0:
         redButton[3] = redButton[3] + 1
         activeRedPess[3] = 1
+        recordButtonPress("red4")
     elif red4 == 0 and activeRedPess[0] == 1:
         activeRedPess[3] = 0
 
     if blue1 == 1 and activeBluePess[0] == 0:
         blueButton[0] = blueButton[0] + 1
         activeBluePess[0] = 1
+        recordButtonPress("blue1")
     elif blue1 == 0 and activeBluePess[0] == 1:
         activeBluePess[0] = 0
     if blue2 == 1 and activeBluePess[1] == 0:
         blueButton[1] = blueButton[1] + 1
         activeBluePess[1] = 1
+        recordButtonPress("blue2")
     elif blue2 == 0 and activeBluePess[1] == 1:
         activeBluePess[1] = 0
     if blue3 == 1 and activeBluePess[2] == 0:
         blueButton[2] = blueButton[2] + 1
         activeBluePess[2] = 1
+        recordButtonPress("blue3")
     elif blue3 == 0 and activeBluePess[2] == 1:
         activeBluePess[2] = 0
     if blue4 == 1 and activeBluePess[3] == 0:
         blueButton[3] = blueButton[3] + 1
         activeBluePess[3] = 1
+        recordButtonPress("blue4")
     elif blue4 == 0 and activeBluePess[0] == 1:
         activeBluePess[3] = 0
 
@@ -168,7 +175,9 @@ while not crashed:
     messageDisplay("Accepted: " + str(blueButton[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 135)
     messageDisplay("Rejected: " + str(redButton[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 165)
     messageDisplay("Rejected 5 Minutes: " + str(red5Minute[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 195)
-
+    messageDisplay("Rejected 10 Minutes: " + str(red10Minute[0]), 36, textPositionSensor1[0],textPositionSensor1[1] + 225)
+    messageDisplay("Accepted 5 Minutes: " + str(blue5Minute[0]), 36, textPositionSensor1[0], textPositionSensor1[1] + 255)
+    messageDisplay("Accepted 10 Minutes: " + str(blue10Minute[0]), 36, textPositionSensor1[0],textPositionSensor1[1] + 285)
 
     # removed ascii characters
     distance = distance.rstrip()
@@ -193,6 +202,11 @@ while not crashed:
     messageDisplay("Red Button: " + red2, 36, textPositionSensor2[0], textPositionSensor2[1] + 70)
     messageDisplay("Distance : " + distance, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
     messageDisplay("Accepted: " + str(blueButton[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 135)
+    messageDisplay("Rejected: " + str(redButton[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 165)
+    messageDisplay("Rejected 5 Minutes: " + str(red5Minute[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 195)
+    messageDisplay("Rejected 10 Minutes: " + str(red10Minute[1]), 36, textPositionSensor2[0],textPositionSensor2[1] + 225)
+    messageDisplay("Accepted 5 Minutes: " + str(blue5Minute[1]), 36, textPositionSensor2[0], textPositionSensor2[1] + 255)
+    messageDisplay("Accepted 10 Minutes: " + str(blue10Minute[1]), 36, textPositionSensor2[0],textPositionSensor2[1] + 285)
 
     lightError = abs(idealLight - int(photo))
     if lightError > 255:
@@ -213,6 +227,10 @@ while not crashed:
     messageDisplay("Light Level: " + photo, 36, textPositionSensor3[0], textPositionSensor3[1] + 105)
     messageDisplay("Accepted: " + str(blueButton[2]), 36, textPositionSensor3[0], textPositionSensor3[1] + 135)
     messageDisplay("Rejected: " + str(redButton[2]), 36, textPositionSensor3[0], textPositionSensor3[1] + 165)
+    messageDisplay("Rejected 5 Minutes: " + str(red5Minute[2]), 36, textPositionSensor3[0], textPositionSensor3[1] + 195)
+    messageDisplay("Rejected 10 Minutes: " + str(red10Minute[2]), 36, textPositionSensor3[0],textPositionSensor3[1] + 225)
+    messageDisplay("Accepted 5 Minutes: " + str(blue5Minute[2]), 36, textPositionSensor3[0], textPositionSensor3[1] + 255)
+    messageDisplay("Accepted 10 Minutes: " + str(blue10Minute[2]), 36, textPositionSensor3[0],textPositionSensor3[1] + 285)
 
     if int(pot) <= 300:
         potError = 255
@@ -233,12 +251,34 @@ while not crashed:
     messageDisplay("Resistance: " + pot, 36, textPositionSensor4[0], textPositionSensor4[1] + 105)
     messageDisplay("Accepted: " + str(blueButton[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 135)
     messageDisplay("Rejected: " + str(redButton[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 165)
+    messageDisplay("Rejected 5 Minutes: " + str(red5Minute[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 195)
+    messageDisplay("Rejected 10 Minutes: " + str(red10Minute[3]), 36, textPositionSensor4[0],textPositionSensor4[1] + 225)
+    messageDisplay("Accepted 5 Minutes: " + str(blue5Minute[3]), 36, textPositionSensor4[0], textPositionSensor4[1] + 255)
+    messageDisplay("Accepted 10 Minutes: " + str(blue10Minute[3]), 36, textPositionSensor4[0],textPositionSensor4[1] + 285)
 
-    if(timeToRefresh < time.time()):
+    if timeToRefresh < time.time():
         timeToRefresh = time.time()+10
 
         red5Minute[0] = checkRecordCount("red1", "5")
-        
+        red5Minute[1] = checkRecordCount("red2", "5")
+        red5Minute[2] = checkRecordCount("red3", "5")
+        red5Minute[3] = checkRecordCount("red4", "5")
+
+        red10Minute[0] = checkRecordCount("red1", "10")
+        red10Minute[1] = checkRecordCount("red2", "10")
+        red10Minute[2] = checkRecordCount("red3", "10")
+        red10Minute[3] = checkRecordCount("red4", "10")
+
+        blue5Minute[0] = checkRecordCount("blue1", "5")
+        blue5Minute[1] = checkRecordCount("blue2", "5")
+        blue5Minute[2] = checkRecordCount("blue3", "5")
+        blue5Minute[3] = checkRecordCount("blue4", "5")
+
+        blue10Minute[0] = checkRecordCount("blue1", "10")
+        blue10Minute[1] = checkRecordCount("blue2", "10")
+        blue10Minute[2] = checkRecordCount("blue3", "10")
+        blue10Minute[3] = checkRecordCount("blue4", "10")
+
     pygame.display.update()
 
 pygame.quit()
