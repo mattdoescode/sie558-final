@@ -18,5 +18,6 @@ void loop() {
 
   val = analogRead(photoPin);    // read the value from the sensor
 
-  Serial.println("blue: " + String(blueButtonValue) + " red: " + String(redButtonValue) + " photoPin: " + val);
+  Serial.println(String(blueButtonValue)+","+String(redButtonValue) + "," + val);
+  delay(500);
 }

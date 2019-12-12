@@ -30,7 +30,5 @@ void loop() {
   duration = pulseIn(echoPin, HIGH);
   distance = (duration * .0343) / 2;
 
-
-  Serial.println("blue: " + String(blueButtonValue) + " red: " + String(redButtonValue) + " sonic: " + distance);
-
+  Serial.println(String(blueButtonValue) + "," + String(redButtonValue) + "," + distance);
 }

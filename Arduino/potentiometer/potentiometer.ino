@@ -4,6 +4,9 @@ const int redButton = 5;
 const int potPin = A0;    // select the input pin for the potentiometer
 int val = 0;       // variable to store the value coming from the sensor
 
+int incomingByte = 0;
+
+
 void setup() {
   Serial.begin(9600);
 
@@ -13,10 +16,17 @@ void setup() {
 }
 
 void loop() {
-  int blueButtonValue = digitalRead(blueButton);
-  int redButtonValue = digitalRead(redButton);
 
-  val = analogRead(potPin);    // read the value from the sensor
-
-  Serial.println("blue: " + String(blueButtonValue) + " red: " + String(redButtonValue) + " potpin: " + val);
+    if (Serial.available() > 0) {
+      // read the incoming byte:
+      incomingByte = Serial.read();
+    
+      int blueButtonValue = digitalRead(blueButton);
+      int redButtonValue = digitalRead(redButton);
+    
+      val = analogRead(potPin);    // read the value from the sensor
+    
+      Serial.println(String(blueButtonValue)+","+String(redButtonValue) + "," + val);
+    }
+    
 }
