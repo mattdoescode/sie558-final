@@ -24,6 +24,7 @@ arduino1 = serial.Serial('COM13', 9600, timeout=1)
 
 currentTime = time.time()
 timeToRefresh = currentTime + 5
+timeToRefreshSensor = currentTime + 2
 
 textPositionSensor1 = [25, 25]
 textPositionSensor2 = [600, 25]
@@ -69,10 +70,12 @@ def translateValueRange(value, oldMin, oldMax, newMin, newMax):
     newValue = (((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
     return newValue;
 
+
 def recordButtonPress(buttonName):
     sql = "INSERT INTO button (name) VALUE ('" + buttonName + "')"
     mycursor.execute(sql)
     cnx.commit()
+
 
 def checkRecordCount(buttonName, timeFrame):
     sql = "SELECT COUNT(name) FROM button WHERE time >= NOW() - INTERVAL " + timeFrame + " MINUTE AND name = '" + buttonName + "'"
@@ -83,6 +86,12 @@ def checkRecordCount(buttonName, timeFrame):
     myresult = mycursor.fetchall()
     for x in myresult:
         return x[0]
+
+
+def recordSensorValue(sensorName, sensorValue):
+    sql = "INSERT INTO sensordata (name, value) VALUE (" + str(sensorName) + " , " + str(sensorValue) + ")"
+    mycursor.execute(sql)
+    cnx.commit()
 
 
 # refactor
@@ -140,7 +149,7 @@ def checkButtonPress(red1, blue1, red2, blue2, red3, blue3, red4, blue4):
 
 micIdeal = 24
 # determine error ranges
-idealLight = 630
+idealLight = 720
 distanceIdeal = 10.1;
 
 while not crashed:
@@ -150,8 +159,11 @@ while not crashed:
 
     gameDisplay.fill((255, 255, 255))
 
-    red1, blue1, red2, blue2, red3, blue3, red4, blue4, pot, photo, mic, distance = arduino1.readline().decode(
-        'ascii').split(",")
+
+    try:
+        red1, blue1, red2, blue2, red3, blue3, red4, blue4, pot, photo, mic, distance = arduino1.readline().decode('ascii').split(",")
+    except:
+        continue
 
     checkButtonPress(int(red1), int(blue1), int(red2), int(blue2), int(red3), int(blue3), int(red4), int(blue4));
 
@@ -278,8 +290,16 @@ while not crashed:
         blue10Minute[1] = checkRecordCount("blue2", "10")
         blue10Minute[2] = checkRecordCount("blue3", "10")
         blue10Minute[3] = checkRecordCount("blue4", "10")
-
     pygame.display.update()
+
+    # if timeToRefreshSensor < time.time():
+    #     timeToRefreshSensor = time.time()+2
+    #
+    #     recordSensorValue("mic", int(mic))
+    #     recordSensorValue("distance", float(mic))
+    #     recordSensorValue("photo", float(photo))
+    #     recordSensorValue("resistance", int(pot))
+
 
 pygame.quit()
 quit()
