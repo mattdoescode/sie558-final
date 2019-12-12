@@ -116,13 +116,16 @@ while not crashed:
     mic = int(mic)
     if mic == micIdeal:
         pygame.draw.rect(gameDisplay, (0, 255, 0), (0, 0, screenX / 2, screenY / 2))
+        error = ""
     elif mic == micIdeal + 1 or mic == micIdeal - 1 or mic == micIdeal - 2:
         pygame.draw.rect(gameDisplay, (125, 130, 0), (0, 0, screenX / 2, screenY / 2))
+        error = ""
     else:
         pygame.draw.rect(gameDisplay, (255, 0, 0), (0, 0, screenX / 2, screenY / 2))
+        error = "ERROR!"
 
     # display grid 1
-    messageDisplay("Station 1:", 48, textPositionSensor1[0], textPositionSensor1[1])
+    messageDisplay("Station 1: " + error, 48, textPositionSensor1[0], textPositionSensor1[1])
     messageDisplay("Blue Button: " + blue1, 36, textPositionSensor1[0], textPositionSensor1[1] + 35)
     messageDisplay("Red Button: " + red1, 36, textPositionSensor1[0], textPositionSensor1[1] + 70)
     messageDisplay("Microphone: " + str(mic), 36, textPositionSensor1[0], textPositionSensor1[1] + 105)
@@ -134,15 +137,20 @@ while not crashed:
 
     if float(distance) > 20:
         changeColor = 255
-    elif float(distance) < 10:
+    elif float(distance) < 9.5:
         changeColor = 255
     else:
-        changeColor = translateValueRange(float(distance), 10, 20, 0, 255)
+        changeColor = translateValueRange(float(distance), 9.5, 20, 0, 255)
 
     pygame.draw.rect(gameDisplay, (changeColor, 255 - changeColor, 0), (screenX / 2, 0, screenX / 2, screenY / 2))
 
+    if changeColor == 255:
+        error = "ERROR!"
+    else:
+        error = ""
+
     # display grid 2
-    messageDisplay("Station 2:", 48, textPositionSensor2[0], textPositionSensor2[1])
+    messageDisplay("Station 2: " + error, 48, textPositionSensor2[0], textPositionSensor2[1])
     messageDisplay("Blue Button: " + blue2, 36, textPositionSensor2[0], textPositionSensor2[1] + 35)
     messageDisplay("Red Button: " + red2, 36, textPositionSensor2[0], textPositionSensor2[1] + 70)
     messageDisplay("Distance : " + distance, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
@@ -156,8 +164,13 @@ while not crashed:
     pygame.draw.rect(gameDisplay, (lightError, 255 - lightError, 0),
                      (screenX / 2, screenY / 2, screenX / 2, screenY / 2))
 
+    if lightError == 255:
+        error = "ERROR!"
+    else:
+        error = ""
+
     # display grid 3
-    messageDisplay("Station 3:", 48, textPositionSensor3[0], textPositionSensor3[1])
+    messageDisplay("Station 3: " + error, 48, textPositionSensor3[0], textPositionSensor3[1])
     messageDisplay("Blue Button: " + blue3, 36, textPositionSensor3[0], textPositionSensor3[1] + 35)
     messageDisplay("Red Button: " + red3, 36, textPositionSensor3[0], textPositionSensor3[1] + 70)
     messageDisplay("Light Level: " + photo, 36, textPositionSensor3[0], textPositionSensor3[1] + 105)
@@ -171,8 +184,13 @@ while not crashed:
         potError = translateValueRange(int(pot), 300, 1024, 0, 255)
         pygame.draw.rect(gameDisplay, (255 - potError, potError, 0), (0, screenY / 2, screenX / 2, screenY / 2))
 
+    if potError == 255:
+        error = "ERROR!"
+    else:
+        error = ""
+
     # display grid 4
-    messageDisplay("Station 4:", 48, textPositionSensor4[0], textPositionSensor4[1])
+    messageDisplay("Station 4: " + error, 48, textPositionSensor4[0], textPositionSensor4[1])
     messageDisplay("Blue Button: " + blue4, 36, textPositionSensor4[0], textPositionSensor4[1] + 35)
     messageDisplay("Red Button: " + red4, 36, textPositionSensor4[0], textPositionSensor4[1] + 70)
     messageDisplay("Resistance: " + pot, 36, textPositionSensor4[0], textPositionSensor4[1] + 105)
