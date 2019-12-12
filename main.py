@@ -13,6 +13,8 @@ arduino1 = serial.Serial('COM13', 9600, timeout=1)
 
 textPositionSensor1 = [25, 25]
 textPositionSensor2 = [600, 25]
+textPositionSensor3 = [600, 600]
+textPositionSensor4 = [25, 600]
 
 pygame.init()
 white = (0, 0, 0)
@@ -31,6 +33,13 @@ def messageDisplay(text, size, xPos, Ypos):
     textSurf = text_objects(text, largeText)
     gameDisplay.blit(textSurf, (xPos, Ypos))
 
+#
+# Function from:
+# https://stackoverflow.com/questions/929103/convert-a-number-range-to-another-range-maintaining-ratio
+def translateValueRange(value, oldMin, oldMax, newMin, newMax):
+    newValue = (((value - oldMin) * (newMax - newMin)) / (oldMax - oldMin)) + newMin
+    return newValue;
+
 
 while not crashed:
     for event in pygame.event.get():
@@ -41,61 +50,37 @@ while not crashed:
 
     red1, blue1, red2, blue2, red3, blue3, red4, blue4, pot, photo, mic, distance = arduino1.readline().decode('ascii').split(",")
 
+    # draw 4 squares 1 for each sensor.
+    pygame.draw.rect(gameDisplay, (255, 0, 0), (0, 0, 300, 300))
+
+    # display grid 1
     messageDisplay("Station 1:", 48, textPositionSensor1[0], textPositionSensor1[1])
     messageDisplay("Blue Button: " + blue1, 36, textPositionSensor1[0], textPositionSensor1[1] + 35)
     messageDisplay("Red Button: " + red1, 36, textPositionSensor1[0], textPositionSensor1[1] + 70)
-    messageDisplay("Potentiometer: " + mic, 36, textPositionSensor1[0], textPositionSensor1[1] + 105)
+    messageDisplay("Microphone: " + mic, 36, textPositionSensor1[0], textPositionSensor1[1] + 105)
 
-    #0 update display arduino2
+    # value of mic is 24ish
+    # we have noise if it gets above 24
+    
+
+    # display grid 2
     messageDisplay("Station 2:", 48, textPositionSensor2[0], textPositionSensor2[1])
     messageDisplay("Blue Button: " + blue2, 36, textPositionSensor2[0], textPositionSensor2[1] + 35)
     messageDisplay("Red Button: " + red2, 36, textPositionSensor2[0], textPositionSensor2[1] + 70)
     distance = distance.rstrip()
-    messageDisplay("Potentiometer: " + distance, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
+    messageDisplay("Distance : " + distance, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
 
+    #display grid 3
+    messageDisplay("Station 3:", 48, textPositionSensor3[0], textPositionSensor3[1])
+    messageDisplay("Blue Button: " + blue3, 36, textPositionSensor3[0], textPositionSensor3[1] + 35)
+    messageDisplay("Red Button: " + red3, 36, textPositionSensor3[0], textPositionSensor3[1] + 70)
+    messageDisplay("Light Level: " + photo, 36, textPositionSensor3[0], textPositionSensor3[1] + 105)
 
-
-    # try:
-    #     sensorData1Blue, sensorData1Red, sensorData1 = arduino1.readline().decode('ascii').split(",")
-    #
-    #     # update display arduino1
-    #     messageDisplay("Station 1:", 48, textPositionSensor1[0], textPositionSensor1[1])
-    #     # remove \n
-    #     sensorData1 = sensorData1.rstrip()
-    #     messageDisplay("Blue Button: " + sensorData1Blue, 36, textPositionSensor1[0], textPositionSensor1[1] + 35)
-    #     messageDisplay("Red Button: " + sensorData1Red, 36, textPositionSensor1[0], textPositionSensor1[1] + 70)
-    #     messageDisplay("Potentiometer: " + sensorData1, 36, textPositionSensor1[0], textPositionSensor1[1] + 105)
-    #
-    #     # update display arduino2
-    #     messageDisplay("Station 2:", 48, textPositionSensor2[0], textPositionSensor2[1])
-    # except:
-    #     print("error reading sensor 1")
-
-    # print(arduino1.readline().decode('ascii').split(","), "      ", arduino2.readline().decode('ascii').split(","),  "      ", arduino4.readline().decode('ascii').split(","), )
-
-
-
-    # print(arduino1.readline().decode('ascii').split(","), "    ", arduino2.readline().decode('ascii').split(","), "     ", arduino3.readline().decode('ascii').split(",")
-    #     , "        ", arduino4.readline().decode('ascii').split(","))
-
-    # try:
-    #     sensorData2Blue, sensorData2Red, sensorData2 = arduino2.readline().decode('ascii').split(",")
-    #     # # remove \n
-    #     sensorData2 = sensorData2.rstrip()
-    #     messageDisplay("Blue Button: " + sensorData2Blue, 36, textPositionSensor2[0], textPositionSensor2[1] + 35)
-    #     messageDisplay("Red Button: " + sensorData2Red, 36, textPositionSensor2[0], textPositionSensor2[1] + 70)
-    #     messageDisplay("Potentiometer: " + sensorData2, 36, textPositionSensor2[0], textPositionSensor2[1] + 105)
-    # except:
-    #     print("error reading sensor 2")
-
-    # update display arduino3
-
-
-    # update display arduino4
-
-
-    # print(type(arduino1.readline().decode('ascii')))
-    # print(arduino2.readline().decode('ascii'))
+    #display grid 4
+    messageDisplay("Station 4:", 48, textPositionSensor4[0], textPositionSensor4[1])
+    messageDisplay("Blue Button: " + blue4, 36, textPositionSensor4[0], textPositionSensor4[1] + 35)
+    messageDisplay("Red Button: " + red4, 36, textPositionSensor4[0], textPositionSensor4[1] + 70)
+    messageDisplay("Resistance: " + pot, 36, textPositionSensor4[0], textPositionSensor4[1] + 105)
 
     pygame.display.update()
 
